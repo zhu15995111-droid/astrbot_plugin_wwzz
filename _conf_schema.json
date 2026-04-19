@@ -1,0 +1,55 @@
+{
+  "Administrator": {
+    "description": "管理员",
+    "type": "list"
+  },
+  "lottery_config":{
+    "description": "基础配置",
+    "type": "object",
+    "items": {
+      "enable_lottery": {
+        "description": "是否开启抽奖",
+        "type": "bool"
+      },
+      "enable_lottery_maintain": {
+        "description": "是否开启抽奖维护",
+        "type": "bool"
+      },
+      "maintain_reminder": {
+        "description": "抽奖维护提醒语",
+        "type": "string"
+      },
+      "lottery_start_time": {
+        "description": "抽奖开始时间",
+        "type": "string",
+        "hint": "格式1970-01-01 00:00:00"
+      },
+      "lottery_end_time": {
+        "description": "抽奖结束时间",
+        "type": "string",
+        "hint": "格式1970-01-01 00:00:00"
+      }
+    }
+  },
+  "prize_config": {
+    "description": "奖品配置",
+    "type": "object",
+    "items": {
+      "normal_prize": {
+        "description": "普通奖品",
+        "type": "list",
+        "hint": "格式 奖品:数量"
+      },
+      "special_prize": {
+        "description": "特殊奖品",
+        "type": "list",
+        "hint": "格式 奖品:数量"
+      },
+      "group_prize": {
+        "description": "群组奖品",
+        "type": "list",
+        "hint": "格式 奖品:数量"
+      }
+    }
+  }
+}

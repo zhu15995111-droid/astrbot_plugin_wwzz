@@ -1,24 +1,42 @@
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
-from astrbot.api import logger
+from astrbot.api import logger,AstrBotConfig
+from astrbot.core.utils.astrbot_path import get_astrbot_data_path
+from pathlib import Path
+import json
+user_lottery_record_file = "lottery_record.json"     #用户抽奖记录
+
+
 
 @register("helloworld", "YourName", "一个简单的 Hello World 插件", "1.0.0")
 class MyPlugin(Star):
-    def __init__(self, context: Context):
+    def __init__(self, context: Context,config: AstrBotConfig):
         super().__init__(context)
+        self.config = config
+        plugin_data_path = Path(get_astrbot_data_path()) / "plugin_data" / "astrbot_plugin_wwzz"
+        self.user_lottery_record = plugin_data_path / user_lottery_record_file
+        plugin_data_path.mkdir(parents=True, exist_ok=True)
+        self.user_lottery_record.touch(exist_ok=True)
 
-    async def initialize(self):
-        """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
+    def read_lottery_record(self) -> dict:
+        ""
+        with open(self.user_lottery_record, "r", encoding="utf-8") as f:
+                return json.load(f)
+        
+
+    def save_lottery_record(self,data: dict):
+        """保存抽奖记录"""
+        with open(self.user_lottery_record, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
     
-    # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    @filter.command("helloworld")
-    async def helloworld(self, event: AstrMessageEvent):
-        """这是一个 hello world 指令11""" # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
-        user_name = event.get_sender_name()
-        message_str = event.message_str # 用户发的纯文本消息字符串
-        message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
-        logger.info(message_chain)
-        yield event.plain_result(f"Hello, {user_name}, 你发了 {message_str}!") # 发送一条纯文本消息
+    @filter.event_message_type(filter.EventMessageType.ALL)
+    async def on_all_message(self, event: AstrMessageEvent):
+        yield event.plain_result("收到了一条消息。")
 
-    async def terminate(self):
-        """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+
+
+    
+    
+
+    
