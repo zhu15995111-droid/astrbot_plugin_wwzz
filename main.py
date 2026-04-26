@@ -1,5 +1,3 @@
-from turtle import pen
-
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger,AstrBotConfig
@@ -121,7 +119,6 @@ class MyPlugin(Star):
         if self.group_id!=group_id:
             self.group_id=group_id
             self.lottery_config()
-        print(self.weights)
         user_prize=self.draw_prize()
         lottery_record[user_id] = today
         self.save_lottery_record(lottery_record)
